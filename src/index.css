@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body text-ink antialiased;
+    min-height: 100dvh;
+    background: linear-gradient(165deg, #fffaf5 0%, #fbf3f8 45%, #f5f0ff 100%);
+  }
+
+  ::selection {
+    background: #f9aec6;
+    color: #3a2b4a;
+  }
+
+  :focus-visible {
+    outline: 3px solid #d4a085;
+    outline-offset: 3px;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.twinkle {
+  animation: twinkle 3.2s ease-in-out infinite;
+  box-shadow: 0 0 8px 2px rgba(212, 160, 133, 0.55);
+}
+
+@keyframes float-up {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate3d(0, -115vh, 0) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.float-up {
+  position: absolute;
+  bottom: -2rem;
+  animation-name: float-up;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes balloon-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+}
+
+.balloon-bob {
+  animation: balloon-bob 6s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(0deg);
+  }
+  25% {
+    transform: scale(0.92, 1.06) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.04, 0.96) rotate(1.5deg);
+  }
+  75% {
+    transform: scale(0.96, 1.04) rotate(-1deg);
+  }
+}
+
+.candle-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
