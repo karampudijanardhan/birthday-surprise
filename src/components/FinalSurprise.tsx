@@ -1,5 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Heart, RotateCcw } from 'lucide-react';
+import {
+  ArrowRight,
+  Gift,
+  Heart,
+  RotateCcw,
+  Sparkles,
+  Star,
+} from 'lucide-react';
 import { useState } from 'react';
 import PrimaryButton from '@/components/PrimaryButton';
 import { birthdayConfig } from '@/config/birthdayConfig';
@@ -9,83 +16,335 @@ interface FinalSurpriseProps {
   onReplay: () => void;
 }
 
-const PARTICLE_COUNT = 18;
-const HEART_COUNT = 7;
+const PARTICLE_COUNT = 24;
+const HEART_COUNT = 8;
 
-export default function FinalSurprise({ onCelebrate, onReplay }: FinalSurpriseProps) {
-  const { teaser, buttonLabel, heading, message, replayLabel } = birthdayConfig.finalSurprise;
+const particles = Array.from({ length: PARTICLE_COUNT }, (_, index) => ({
+  id: index,
+  left: `${(index * 37 + 7) % 96}%`,
+  top: `${(index * 53 + 11) % 95}%`,
+  delay: (index % 8) * 0.35,
+  size: index % 3 === 0 ? 5 : 3,
+}));
+
+const hearts = Array.from({ length: HEART_COUNT }, (_, index) => ({
+  id: index,
+  left: `${(index * 13 + 3) % 94}%`,
+  delay: index * 1.1,
+  duration: 8 + (index % 4) * 2,
+}));
+
+export default function FinalSurprise({
+  onCelebrate,
+  onReplay,
+}: FinalSurpriseProps) {
+  const {
+    teaser,
+    buttonLabel,
+    heading,
+    message,
+    replayLabel,
+  } = birthdayConfig.finalSurprise;
+
   const [isRevealed, setIsRevealed] = useState(false);
 
   const handleReveal = () => {
     if (isRevealed) return;
+
     setIsRevealed(true);
     onCelebrate();
   };
 
   return (
-    <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-midnight-950 via-midnight-800 to-midnight-700 px-6 py-24 text-center text-blush-50">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {Array.from({ length: PARTICLE_COUNT }, (_, index) => (
-          <span
-            key={`particle-${index}`}
-            className="twinkle absolute h-1 w-1 rounded-full bg-blush-200"
+    <section className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 px-5 py-24 text-center text-white sm:px-8">
+      {/* Background glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <motion.div
+          className="absolute left-1/2 top-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/15 blur-[100px] sm:h-[35rem] sm:w-[35rem]"
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.45, 0.8, 0.45],
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+
+        {particles.map((particle) => (
+          <motion.span
+            key={particle.id}
+            className="absolute rounded-full bg-blue-200"
             style={{
-              left: `${(index * 23) % 100}%`,
-              top: `${(index * 37 + 11) % 100}%`,
-              animationDelay: `${(index % 6) * 0.5}s`,
+              left: particle.left,
+              top: particle.top,
+              width: particle.size,
+              height: particle.size,
+            }}
+            animate={{
+              opacity: [0.15, 1, 0.15],
+              scale: [0.7, 1.4, 0.7],
+            }}
+            transition={{
+              duration: 2.5,
+              delay: particle.delay,
+              repeat: Infinity,
+              ease: 'easeInOut',
             }}
           />
         ))}
-        {Array.from({ length: HEART_COUNT }, (_, index) => (
-          <Heart
-            key={`heart-${index}`}
-            className="float-up h-5 w-5 fill-blush-300/60 text-blush-300/60"
-            style={{
-              left: `${(index * 15 + 5) % 92}%`,
-              animationDelay: `${index * 1.8}s`,
-              animationDuration: `${12 + (index % 3) * 3}s`,
+
+        {hearts.map((heart) => (
+          <motion.div
+            key={heart.id}
+            className="absolute bottom-[-40px]"
+            style={{ left: heart.left }}
+            animate={{
+              y: [0, -window.innerHeight - 100],
+              x: [0, 15, -12, 0],
+              opacity: [0, 0.65, 0],
+              rotate: [0, 15, -15, 0],
             }}
-          />
+            transition={{
+              duration: heart.duration,
+              delay: heart.delay,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          >
+            <Heart className="h-5 w-5 fill-blue-300/30 text-blue-200/50" />
+          </motion.div>
         ))}
       </div>
 
       <AnimatePresence mode="wait">
-        {isRevealed ? (
+        {!isRevealed ? (
           <motion.div
-            key="message"
-            initial={{ opacity: 0, y: 28, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-w-2xl flex-col items-center"
+            key="gift-teaser"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, filter: 'blur(8px)' }}
+            transition={{ duration: 0.7 }}
+            className="relative z-10 flex w-full max-w-xl flex-col items-center"
           >
-            <h2 className="font-display text-4xl font-semibold leading-[1.2] text-white sm:text-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="mb-5 flex items-center gap-2 rounded-full border border-blue-300/20 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-blue-200 backdrop-blur-md sm:text-sm"
+            >
+              <Sparkles className="h-4 w-4 text-amber-300" />
+              A special birthday gift
+              <Sparkles className="h-4 w-4 text-amber-300" />
+            </motion.div>
+
+            <h2 className="max-w-lg font-display text-3xl font-semibold leading-tight text-white sm:text-5xl">
+              {teaser}
+            </h2>
+
+            <p className="mt-4 max-w-md text-sm leading-7 text-blue-100/75 sm:text-base">
+              There is one more little surprise waiting for you.
+              Open it to discover the thought behind your gift. 💙
+            </p>
+
+            {/* Animated gift */}
+            <motion.div
+              className="relative my-10 flex h-48 w-48 items-center justify-center sm:my-12 sm:h-56 sm:w-56"
+              animate={{ y: [0, -8, 0] }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            >
+              <motion.div
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full bg-blue-400/15 blur-2xl"
+                animate={{
+                  scale: [0.85, 1.15, 0.85],
+                  opacity: [0.4, 0.8, 0.4],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+
+              <motion.div
+                className="relative flex h-36 w-36 items-center justify-center rounded-[2rem] border border-blue-200/30 bg-gradient-to-br from-blue-400 via-blue-600 to-indigo-800 shadow-[0_0_60px_rgba(59,130,246,0.35)] sm:h-44 sm:w-44"
+                animate={{ rotate: [0, -2, 2, 0] }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-y-0 left-1/2 w-5 -translate-x-1/2 bg-blue-100/80 shadow-sm"
+                />
+
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-1/2 h-5 -translate-y-1/2 bg-blue-100/80 shadow-sm"
+                />
+
+                <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border border-white/40 bg-blue-700 shadow-lg sm:h-20 sm:w-20">
+                  <Gift className="h-9 w-9 text-white sm:h-11 sm:w-11" />
+                </div>
+              </motion.div>
+
+              <motion.div
+                aria-hidden="true"
+                className="absolute -right-1 top-4"
+                animate={{ rotate: [0, 20, -10, 0], scale: [1, 1.2, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <Star className="h-7 w-7 fill-amber-300 text-amber-300" />
+              </motion.div>
+
+              <motion.div
+                aria-hidden="true"
+                className="absolute -left-2 bottom-8"
+                animate={{ rotate: [0, -20, 10, 0], scale: [1, 1.15, 1] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              >
+                <Sparkles className="h-8 w-8 text-blue-200" />
+              </motion.div>
+            </motion.div>
+
+            <PrimaryButton onClick={handleReveal}>
+              <Gift className="h-5 w-5" />
+              {buttonLabel}
+              <ArrowRight className="h-5 w-5" />
+            </PrimaryButton>
+
+            <p className="mt-6 text-xs tracking-wide text-blue-200/60 sm:text-sm">
+              Made with care by Janardhan 💙
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="gift-reveal"
+            initial={{ opacity: 0, y: 35, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{
+              duration: 0.9,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="relative z-10 flex w-full max-w-3xl flex-col items-center"
+          >
+            <motion.div
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{
+                type: 'spring',
+                stiffness: 180,
+                damping: 12,
+                delay: 0.2,
+              }}
+              className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-blue-200/30 bg-blue-400/10 shadow-[0_0_45px_rgba(96,165,250,0.25)] sm:h-24 sm:w-24"
+            >
+              <Gift className="h-10 w-10 text-blue-200 sm:h-12 sm:w-12" />
+            </motion.div>
+
+            <p className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-blue-200 sm:text-sm">
+              <Sparkles className="h-4 w-4" />
+              A gift for your bright future
+              <Sparkles className="h-4 w-4" />
+            </p>
+
+            <h2 className="max-w-2xl bg-gradient-to-r from-white via-blue-100 to-blue-300 bg-clip-text font-display text-3xl font-semibold leading-tight text-transparent sm:text-5xl md:text-6xl">
               {heading}
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-blush-100 sm:text-lg">{message}</p>
-            <div className="mt-10">
+
+            {/* Parker pen illustration */}
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.7 }}
+              className="relative my-8 flex w-full max-w-md flex-col items-center rounded-3xl border border-blue-200/20 bg-white/[0.06] px-5 py-8 shadow-2xl backdrop-blur-md sm:my-10 sm:px-10 sm:py-10"
+            >
+              <motion.div
+                aria-hidden="true"
+                className="absolute right-5 top-5"
+                animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <Sparkles className="h-6 w-6 text-amber-300" />
+              </motion.div>
+
+              <div className="relative flex h-24 w-full items-center justify-center sm:h-28">
+                <motion.div
+                  className="relative flex h-4 w-[82%] max-w-[290px] items-center rounded-full border border-blue-200/60 bg-gradient-to-b from-sky-200 via-blue-500 to-blue-800 shadow-[0_8px_22px_rgba(37,99,235,0.35)] sm:h-5"
+                  initial={{ rotate: -12, scaleX: 0.65, opacity: 0 }}
+                  animate={{ rotate: -12, scaleX: 1, opacity: 1 }}
+                  transition={{ delay: 0.55, duration: 0.8, ease: 'easeOut' }}
+                >
+                  <div className="absolute left-[15%] h-full w-[2px] bg-white/70" />
+                  <div className="absolute right-[18%] h-full w-[2px] bg-white/70" />
+
+                  <div className="absolute -right-2 top-1/2 h-3 w-5 -translate-y-1/2 rounded-r-full bg-slate-300 sm:h-4" />
+
+                  <div className="absolute -left-3 top-1/2 h-3 w-5 -translate-y-1/2 rounded-l-full bg-blue-300 sm:h-4" />
+
+                  <div className="absolute left-[22%] top-1/2 -translate-y-1/2 text-[8px] font-bold tracking-widest text-white sm:text-[9px]">
+                    PARKER
+                  </div>
+
+                  <div className="absolute right-[28%] top-1/2 h-8 w-1 -translate-y-1/2 rounded-full bg-slate-300 shadow sm:h-9" />
+                </motion.div>
+              </div>
+
+              <p className="mt-3 text-xs uppercase tracking-[0.25em] text-blue-200/70">
+                A blue Parker pen
+              </p>
+              <p className="mt-3 max-w-xs text-center text-sm leading-7 text-blue-50/80 sm:text-base">
+                A small gift for a girl with big dreams.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55, duration: 0.8 }}
+              className="max-w-2xl"
+            >
+              <div className="mb-5 flex items-center justify-center gap-2 text-blue-200">
+                <Heart className="h-4 w-4 fill-blue-300 text-blue-300" />
+                <span className="text-sm font-medium">For Parameswari</span>
+                <Heart className="h-4 w-4 fill-blue-300 text-blue-300" />
+              </div>
+
+              <p className="whitespace-pre-line text-base leading-8 text-blue-50/90 sm:text-lg sm:leading-9">
+                {message}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.7 }}
+              className="mt-9 flex flex-col items-center gap-4"
+            >
+              <p className="font-display text-xl italic text-blue-200 sm:text-2xl">
+                Keep writing your beautiful future. 💙
+              </p>
+
               <PrimaryButton variant="ghost" onClick={onReplay}>
                 <RotateCcw className="h-5 w-5" />
                 {replayLabel}
               </PrimaryButton>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="teaser"
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.5 }}
-            className="relative z-10 flex flex-col items-center"
-          >
-            <p className="mb-10 font-display text-2xl italic text-blush-100 sm:text-3xl">{teaser}</p>
-            <motion.div
-              aria-hidden="true"
-              animate={{ scale: [1, 1.08, 1] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-              className="mb-10 flex h-36 w-36 items-center justify-center rounded-full bg-gradient-to-br from-blush-400/80 to-lavender-400/80 shadow-[0_0_80px_rgba(240,135,168,0.55)] sm:h-44 sm:w-44"
-            >
-              <Heart className="h-16 w-16 fill-white text-white sm:h-20 sm:w-20" />
+
+              <p className="mt-2 text-xs tracking-wide text-blue-200/60 sm:text-sm">
+                With best wishes, Janardhan ✨
+              </p>
             </motion.div>
-            <PrimaryButton onClick={handleReveal}>{buttonLabel}</PrimaryButton>
           </motion.div>
         )}
       </AnimatePresence>
