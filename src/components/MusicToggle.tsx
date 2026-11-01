@@ -1,103 +1,108 @@
+
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Music2, Pause } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
 
 interface MusicToggleProps {
   src: string;
-  title: string;
+  title?: string;
 }
 
-export default function MusicToggle({ src, title }: MusicToggleProps) {
+export default function MusicToggle({
+  src,
+  title = 'Birthday Song',
+}: MusicToggleProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isUnavailable, setIsUnavailable] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const audio = new Audio(src);
-
     audio.loop = true;
-    audio.preload = 'none';
+    audio.preload = 'auto';
+    audioRef.current = audio;
 
-    const handleEnded = () => setIsPlaying(false);
+    const startMusic = async () => {
+      if (!audio.paused) return;
 
-    const handleError = () => {
-      setIsPlaying(false);
-      setIsUnavailable(true);
+      try {
+        await audio.play();
+      } catch (error) {
+        console.info('Browser requires user interaction to play music.', error);
+      }
     };
 
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('error', handleError);
+    const handleFirstInteraction = (event: Event) => {
+      const target = event.target;
 
-    audioRef.current = audio;
-    setIsPlaying(false);
-    setIsUnavailable(false);
+      if (
+        target instanceof Element &&
+        target.closest('[data-music-toggle]')
+      ) {
+        return;
+      }
+
+      void startMusic();
+    };
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+
+    // Try autoplay when the website opens.
+    void startMusic();
+
+    // If autoplay is blocked, start after the visitor interacts.
+    document.addEventListener('pointerdown', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
 
     return () => {
+      document.removeEventListener('pointerdown', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+
       audio.pause();
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('error', handleError);
       audioRef.current = null;
     };
   }, [src]);
 
-  const toggle = async () => {
+  const toggleMusic = async () => {
     const audio = audioRef.current;
+    if (!audio) return;
 
-    if (!audio || isUnavailable) return;
-
-    if (!audio.paused) {
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch (error) {
+        console.error('Unable to play birthday music:', error);
+      }
+    } else {
       audio.pause();
-      setIsPlaying(false);
-      return;
-    }
-
-    try {
-      await audio.play();
-      setIsPlaying(true);
-    } catch {
-      setIsPlaying(false);
-      setIsUnavailable(true);
     }
   };
-
-  if (isUnavailable) return null;
 
   return (
     <motion.button
       type="button"
-      onClick={toggle}
-      aria-pressed={isPlaying}
-      aria-label={isPlaying ? `Pause ${title}` : `Play ${title}`}
-      title={isPlaying ? `Pause ${title}` : `Play ${title}`}
-      whileHover={shouldReduceMotion ? undefined : { scale: 1.08, y: -2 }}
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.94 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-      className="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-blue-200/70 bg-white/90 text-blue-700 shadow-lg shadow-blue-300/25 backdrop-blur-xl transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300 focus-visible:ring-offset-2 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
+      data-music-toggle
+      onClick={toggleMusic}
+      title={title}
+      aria-label={isPlaying ? 'Pause birthday music' : 'Play birthday music'}
+      className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full border border-white/60 bg-white/85 px-4 py-3 text-blue-700 shadow-lg backdrop-blur-md"
+      animate={
+        reducedMotion
+          ? undefined
+          : { scale: isPlaying ? [1, 1.05, 1] : 1 }
+      }
+      transition={{ duration: 2, repeat: isPlaying ? Infinity : 0 }}
     >
-      {/* Soft glow while music is playing */}
-      {isPlaying && !shouldReduceMotion && (
-        <motion.span
-          aria-hidden="true"
-          className="absolute inset-0 rounded-full border border-blue-400/60"
-          animate={{
-            scale: [1, 1.35, 1],
-            opacity: [0.7, 0, 0.7],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      )}
-
-      <span className="relative flex items-center justify-center">
-        {isPlaying ? (
-          <Pause className="h-5 w-5 sm:h-6 sm:w-6" />
-        ) : (
-          <Music2 className="h-5 w-5 sm:h-6 sm:w-6" />
-        )}
+      {isPlaying ? <Pause size={20} /> : <Music2 size={20} />}
+      <span className="text-sm font-semibold">
+        {isPlaying ? 'Pause Music' : 'Play Music'}
       </span>
     </motion.button>
   );

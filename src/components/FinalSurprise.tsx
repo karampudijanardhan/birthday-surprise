@@ -1,3 +1,4 @@
+
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -104,7 +105,7 @@ export default function FinalSurprise({
             className="absolute bottom-[-40px]"
             style={{ left: heart.left }}
             animate={{
-              y: [0, -window.innerHeight - 100],
+              y: [0, -1000],
               x: [0, 15, -12, 0],
               opacity: [0, 0.65, 0],
               rotate: [0, 15, -15, 0],
@@ -151,7 +152,7 @@ export default function FinalSurprise({
               Open it to discover the thought behind your gift. 💙
             </p>
 
-            {/* Animated gift */}
+            {/* Animated gift box */}
             <motion.div
               className="relative my-10 flex h-48 w-48 items-center justify-center sm:my-12 sm:h-56 sm:w-56"
               animate={{ y: [0, -8, 0] }}
@@ -184,15 +185,8 @@ export default function FinalSurprise({
                   ease: 'easeInOut',
                 }}
               >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-1/2 w-5 -translate-x-1/2 bg-blue-100/80 shadow-sm"
-                />
-
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-1/2 h-5 -translate-y-1/2 bg-blue-100/80 shadow-sm"
-                />
+                <div className="absolute inset-y-0 left-1/2 w-5 -translate-x-1/2 bg-blue-100/80 shadow-sm" />
+                <div className="absolute inset-x-0 top-1/2 h-5 -translate-y-1/2 bg-blue-100/80 shadow-sm" />
 
                 <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border border-white/40 bg-blue-700 shadow-lg sm:h-20 sm:w-20">
                   <Gift className="h-9 w-9 text-white sm:h-11 sm:w-11" />
@@ -263,56 +257,50 @@ export default function FinalSurprise({
               {heading}
             </h2>
 
-            {/* Parker pen illustration */}
+            {/* Actual Parker Classic Gold pen photo */}
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.7 }}
-              className="relative my-8 flex w-full max-w-md flex-col items-center rounded-3xl border border-blue-200/20 bg-white/[0.06] px-5 py-8 shadow-2xl backdrop-blur-md sm:my-10 sm:px-10 sm:py-10"
+              initial={{ opacity: 0, scale: 0.85, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.8 }}
+              className="my-8 w-full max-w-md overflow-hidden rounded-3xl border border-amber-200/30 bg-white p-4 shadow-2xl sm:my-10"
             >
-              <motion.div
-                aria-hidden="true"
-                className="absolute right-5 top-5"
-                animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <Sparkles className="h-6 w-6 text-amber-300" />
-              </motion.div>
+              <img
+                src="/images/parker-gold.jpeg"
+                alt="Parker Classic Gold Ball Pen gift"
+                className="mx-auto max-h-[420px] w-full object-contain"
+              />
 
-              <div className="relative flex h-24 w-full items-center justify-center sm:h-28">
-                <motion.div
-                  className="relative flex h-4 w-[82%] max-w-[290px] items-center rounded-full border border-blue-200/60 bg-gradient-to-b from-sky-200 via-blue-500 to-blue-800 shadow-[0_8px_22px_rgba(37,99,235,0.35)] sm:h-5"
-                  initial={{ rotate: -12, scaleX: 0.65, opacity: 0 }}
-                  animate={{ rotate: -12, scaleX: 1, opacity: 1 }}
-                  transition={{ delay: 0.55, duration: 0.8, ease: 'easeOut' }}
-                >
-                  <div className="absolute left-[15%] h-full w-[2px] bg-white/70" />
-                  <div className="absolute right-[18%] h-full w-[2px] bg-white/70" />
-
-                  <div className="absolute -right-2 top-1/2 h-3 w-5 -translate-y-1/2 rounded-r-full bg-slate-300 sm:h-4" />
-
-                  <div className="absolute -left-3 top-1/2 h-3 w-5 -translate-y-1/2 rounded-l-full bg-blue-300 sm:h-4" />
-
-                  <div className="absolute left-[22%] top-1/2 -translate-y-1/2 text-[8px] font-bold tracking-widest text-white sm:text-[9px]">
-                    PARKER
-                  </div>
-
-                  <div className="absolute right-[28%] top-1/2 h-8 w-1 -translate-y-1/2 rounded-full bg-slate-300 shadow sm:h-9" />
-                </motion.div>
-              </div>
-
-              <p className="mt-3 text-xs uppercase tracking-[0.25em] text-blue-200/70">
-                A blue Parker pen
+              <p className="mt-3 text-center text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">
+                Parker Classic Gold
               </p>
-              <p className="mt-3 max-w-xs text-center text-sm leading-7 text-blue-50/80 sm:text-base">
-                A small gift for a girl with big dreams.
+
+              <p className="mt-2 text-center text-sm text-slate-600">
+                Blue ink • A little gift for your big dreams.
               </p>
             </motion.div>
 
+            {/* Short Parker history */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55, duration: 0.8 }}
+              transition={{ delay: 0.5, duration: 0.7 }}
+              className="mb-6 max-w-xl rounded-2xl border border-blue-200/20 bg-white/[0.06] p-5 backdrop-blur-md"
+            >
+              <h3 className="mb-2 font-display text-xl text-amber-200">
+                A Little Story Behind Parker
+              </h3>
+              <p className="text-sm leading-7 text-blue-100/80 sm:text-base">
+                Founded in 1888 by George S. Parker, Parker has a long history
+                of writing instruments known for their elegant design and
+                craftsmanship.
+              </p>
+            </motion.div>
+
+            {/* Personal gift message */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65, duration: 0.8 }}
               className="max-w-2xl"
             >
               <div className="mb-5 flex items-center justify-center gap-2 text-blue-200">
@@ -333,7 +321,7 @@ export default function FinalSurprise({
               className="mt-9 flex flex-col items-center gap-4"
             >
               <p className="font-display text-xl italic text-blue-200 sm:text-2xl">
-                Keep writing your beautiful future. 💙
+                Today, this pen is my gift. Tomorrow, let it write your success story. 💙
               </p>
 
               <PrimaryButton variant="ghost" onClick={onReplay}>

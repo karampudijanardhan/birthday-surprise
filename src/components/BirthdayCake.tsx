@@ -1,3 +1,4 @@
+
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -88,6 +89,22 @@ export default function BirthdayCake({
     Array.from({ length: candleCount }, () => false),
   );
 
+  // NEW: Play celebration blast sound
+const playBlastSound = () => {
+  const audio = new Audio('/sounds/celebration.mp3');
+  audio.volume = 0.8;
+
+  audio.currentTime = 0;
+  audio.play().catch(() => {
+    console.warn('Celebration sound could not be played.');
+  });
+
+  // Stop automatically after 3 seconds
+  window.setTimeout(() => {
+    audio.pause();
+    audio.currentTime = 0;
+  }, 3000);
+};
   const isBlown = lit.every((isOn) => !isOn);
 
   const snuffCandle = (index: number) => {
@@ -102,6 +119,7 @@ export default function BirthdayCake({
     );
 
     if (nextLit.every((isOn) => !isOn)) {
+      playBlastSound();
       onCelebrate();
     }
   };
@@ -114,11 +132,23 @@ export default function BirthdayCake({
     );
 
     setLit(lit.map(() => false));
+
+    // NEW: Sound when the button is clicked
+    playBlastSound();
     onCelebrate();
   };
 
   return (
-    <section className="relative isolate flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-blue-50 via-white to-purple-50 px-5 pb-20 pt-28 text-center sm:px-8">
+    <section
+      className="relative isolate flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-blue-50 via-white to-purple-50 px-5 pb-20 pt-28 text-center sm:px-8"
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(239,246,255,0.82), rgba(255,255,255,0.82), rgba(250,245,255,0.82)), url('/images/sister-06.jpeg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       {/* Background decoration */}
       <div
         aria-hidden="true"

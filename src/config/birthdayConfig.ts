@@ -1,7 +1,21 @@
+
 import type { BirthdayConfig } from '@/types/birthday';
 
 const sisterName = 'Parameswari';
 const brotherName = 'Janardhan';
+
+const photoCaptions = [
+  'A collection of lovely memories ✨',
+  'Every moment tells a story 💖',
+  'Beautiful moments to remember 🌸',
+  'Little memories, big smiles 💙',
+  'The beginning of a beautiful journey 🧸',
+  'A precious childhood memory 🌷',
+  'Always keep smiling 💕',
+  'Growing with beautiful dreams ✨',
+  'A special moment in your journey 💜',
+  'Your story is still being written 💙',
+];
 
 export const birthdayConfig: BirthdayConfig = {
   sisterName,
@@ -22,30 +36,18 @@ export const birthdayConfig: BirthdayConfig = {
   },
 
   gallery: {
-    heading: 'Little Things That Make You Special 💖',
+    heading: 'Her Beautiful Journey 💙',
     subheading:
-      'A few heartfelt wishes for someone whose kindness has made a difference in my life. This little collection is a reminder of how much I appreciate you.',
+      'From childhood memories to the beautiful person you are today. Every picture holds a special moment. Keep smiling, Parameswari!',
     continueLabel: 'Read My Letter 💌',
-    photos: [
-      {
-        id: 'sister-01',
-        src: '/images/sister-01.jpg',
-        alt: 'A birthday-themed image celebrating Parameswari',
-        caption: 'Your smile deserves endless happiness. 💙',
-      },
-      {
-        id: 'sister-02',
-        src: '/images/sister-02.jpg',
-        alt: 'A cheerful birthday image for Parameswari',
-        caption: 'Keep being the kind, clever person you are. 🌷',
-      },
-      {
-        id: 'sister-03',
-        src: '/images/sister-03.jpg',
-        alt: 'An image representing dreams and future achievements',
-        caption: 'A bright future filled with dreams and achievements. ✨',
-      },
-    ],
+
+    photos: Array.from({ length: 10 }, (_, index) => ({
+      id: `sister-${String(index + 1).padStart(2, '0')}`,
+      src: `/images/sister-${String(index + 1).padStart(2, '0')}.jpeg`,
+
+      alt: `A special memory of Parameswari ${index + 1}`,
+      caption: photoCaptions[index],
+    })),
   },
 
   letter: {
@@ -69,9 +71,6 @@ export const birthdayConfig: BirthdayConfig = {
       'You may not always realize how much your kindness means to others, but I hope you never lose that beautiful quality. Keep being the clever, caring, and hardworking person you are. May this new year of your life bring you wonderful opportunities, new achievements, peace of mind, good health, and the confidence to face every challenge.',
 
       'Once again, happy birthday, Parameswari! Keep smiling, keep learning, keep taking care of yourself, and keep moving towards your dreams. Whatever the future brings, I sincerely wish to see you happy, successful, and proud of the person you become.',
-
-      'With heartfelt birthday wishes,',
-      'Your brother, Janardhan 💙',
     ],
 
     signoff: 'With heartfelt birthday wishes,',
@@ -94,16 +93,20 @@ export const birthdayConfig: BirthdayConfig = {
     teaser: 'Wait... your birthday surprise is not over yet! 🎁',
     buttonLabel: 'Reveal Your Special Gift 💙',
     heading: 'One Pen. A Thousand Possibilities. 🖊️',
-    message:
-      'This little blue Parker pen represents something bigger than a gift. May it accompany you through your studies, help you write wonderful answers in your exams, capture your best ideas, and one day sign the offer letter for the job you have worked so hard to achieve. May every page you write bring you closer to your dreams. Keep learning, keep believing in yourself, and keep writing a beautiful story with your life. Happy Birthday, Parameswari! 💙',
-    replayLabel: 'Relive Your Birthday Surprise ✨',
+    message: `Parameswari, you always work hard and dream big.
+
+This little golden pen is a reminder that your future is waiting to be written. May every page bring you good marks, new ideas, success, and happiness.
+
+One day, I hope this pen helps you sign your dream job offer letter.
+
+Keep shining, keep learning, and never stop believing in yourself. 💛`,
   },
 
-  music: {
-    enabled: true,
-    src: '/audio/birthday-music.mp3',
-    title: 'Birthday Music 🎵',
-  },
+ music: {
+  enabled: true,
+  src: '/audio/birthday-music.mp3',
+  title: 'Birthday Song',
+},
 
   theme: {
     confettiColors: [
