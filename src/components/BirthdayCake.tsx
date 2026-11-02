@@ -143,7 +143,7 @@ const playBlastSound = () => {
       className="relative isolate flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-blue-50 via-white to-purple-50 px-5 pb-20 pt-28 text-center sm:px-8"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, rgba(239,246,255,0.82), rgba(255,255,255,0.82), rgba(250,245,255,0.82)), url('/images/sister-06.jpeg')",
+          "linear-gradient(to bottom, rgba(239,246,255,0.82), rgba(255,255,255,0.82), rgba(250,245,255,0.82)), url('/images/sister-07.jpeg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

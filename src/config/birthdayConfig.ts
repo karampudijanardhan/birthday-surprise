@@ -73,9 +73,9 @@ export const birthdayConfig: BirthdayConfig = {
       'Once again, happy birthday, Parameswari! Keep smiling, keep learning, keep taking care of yourself, and keep moving towards your dreams. Whatever the future brings, I sincerely wish to see you happy, successful, and proud of the person you become.',
     ],
 
-    signoff: 'With heartfelt birthday wishes,',
-    signature: brotherName,
-    continueLabel: 'Let’s Celebrate with Cake 🎂',
+    signoff: 'With lots of love, care, and heartfelt birthday wishes,',
+signature: 'Your Brother, Janardhan 💙',
+continueLabel: 'Let’s Celebrate with Cake 🎂',
   },
 
   cake: {
